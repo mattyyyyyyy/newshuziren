@@ -1,5 +1,5 @@
 {
-  "name": "V10.0-AIGC platform",
+  "name": "newshuziren-V1",
   "description": "A mesmerizing, interactive WebGL background shader using Three.js that creates fluid, colorful distortions with customizable parameters.",
   "requestFramePermissions": [
     "microphone"

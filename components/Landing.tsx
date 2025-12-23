@@ -117,13 +117,13 @@ const FeatureCard: React.FC<FeatureCardProps> = memo(({
           ? undefined 
           : '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
       }}
-      // OPTIMIZATION: Reduced blur from xl to md/lg for performance
-      className={`absolute w-64 h-96 cursor-pointer group origin-center will-change-transform rounded-[2rem] bg-white/5 backdrop-blur-md border transition-all duration-500 overflow-hidden
+      // OPTIMIZATION: Updated dimensions to w-[280px] h-[420px] for balanced look
+      className={`absolute w-[280px] h-[420px] cursor-pointer group origin-center will-change-transform rounded-[2rem] bg-white/5 backdrop-blur-md border transition-all duration-500 overflow-hidden
         ${isHovered ? 'animate-border-pulse bg-white/10' : 'border-white/10'}
       `}
     >
         {/* Content Container */}
-        <div className="relative z-10 h-full w-full flex flex-col items-center justify-end pb-8 select-none">
+        <div className="relative z-10 h-full w-full flex flex-col items-center justify-end pb-10 select-none">
             {/* Visual Content: Video Only */}
             <div className="absolute inset-0">
                  <video
@@ -181,12 +181,12 @@ export default function Landing({ onSelectModule, lang, setLang, t }: LandingPro
         const baseWidth = 1536; 
         const baseHeight = 864;
         
-        const widthScale = Math.min(1, Math.max(0.55, window.innerWidth / baseWidth));
-        const heightScale = Math.min(1, Math.max(0.55, window.innerHeight / baseHeight));
+        const widthScale = Math.max(0.65, window.innerWidth / baseWidth);
+        const heightScale = Math.max(0.65, window.innerHeight / baseHeight);
         
         // Use the smaller scale to ensure it fits in the viewport without overlapping
-        // Bias slightly towards width to keep cards readable
-        setDeckScale(Math.min(widthScale, heightScale));
+        // Bias slightly towards width to keep cards readable, allow up to 1.1 scale
+        setDeckScale(Math.min(1.1, Math.min(widthScale, heightScale)));
       }, 50);
     };
     handleResize(); // Init
@@ -219,8 +219,9 @@ export default function Landing({ onSelectModule, lang, setLang, t }: LandingPro
   };
 
   // --- Card Deck Logic ---
-  const CARD_SPACING = 190; 
-  const PUSH_DISTANCE = 220; 
+  // Updated spacing for medium cards (280px width)
+  const CARD_SPACING = 210; 
+  const PUSH_DISTANCE = 260; 
   const CENTER_INDEX = 1.5; // Adjusted center for 4 items
 
   const getCardStyle = (index: number) => {
@@ -359,7 +360,7 @@ export default function Landing({ onSelectModule, lang, setLang, t }: LandingPro
         
         {/* Title & Subtitle Section */}
         {/* Positioned around 22% down from the top viewport edge */}
-        <div className="flex flex-col items-center mt-[22vh] md:mt-[22vh] z-20">
+        <div className="flex flex-col items-center mt-[18vh] md:mt-[18vh] z-20">
             {/* Title Container */}
             <div className="flex items-center justify-center min-h-[80px] md:min-h-[120px]">
                <Typewriter phrases={typewriterPhrases} />
@@ -372,7 +373,7 @@ export default function Landing({ onSelectModule, lang, setLang, t }: LandingPro
            className={`relative flex-1 w-full flex items-center justify-center mt-0 max-w-6xl perspective-1000 animate-in fade-in zoom-in-95 duration-1000 delay-200 ${animData ? 'opacity-0 pointer-events-none' : 'opacity-100'} transition-opacity duration-300`}
         >
            <div 
-             className="relative h-[450px] w-full flex justify-center items-center"
+             className="relative h-[600px] w-full flex justify-center items-center"
              style={{ transform: `scale(${deckScale})`, transformOrigin: 'center center' }}
            >
              {featureList.map((feature, index) => (

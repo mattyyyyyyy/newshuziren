@@ -99,17 +99,6 @@ const VOICE_EMOTIONS = [
   { id: 'whisper', name: '低语' }
 ];
 
-const ACTIONS = [
-  { id: 'wave', name: 'Wave / 挥手', icon: '👋' },
-  { id: 'greet', name: 'Greet / 问候', icon: '🤝' },
-  { id: 'run', name: 'Run / 跑步', icon: '🏃' },
-  { id: 'walk', name: 'Walk / 走路', icon: '🚶' },
-  { id: 'idle', name: 'Idle / 待机', icon: '🧍' },
-  { id: 'dance', name: 'Dance / 跳舞', icon: '💃' },
-  { id: 'jump', name: 'Jump / 跳跃', icon: '⏫' },
-  { id: 'sit', name: 'Sit / 坐下', icon: '🪑' },
-];
-
 const BACKGROUNDS = [
   { id: 'green_screen', name: '绿幕', type: 'color', value: '#00FF00' },
   { id: 'blue_screen', name: '蓝幕', type: 'color', value: '#0000FF' },
@@ -1957,4 +1946,147 @@ export default function Studio({ module, onChangeModule, lang, setLang, onBack, 
                   )}
 
                   {activeRightTab === 'mine' && (
-                  <div className="flex-1 flex flex-col h-full fade-in duration
+                  <div className="flex-1 flex flex-col h-full fade-in duration-300">
+                      <div className="shrink-0 px-5 pt-5 pb-0">
+                          <div className="flex items-center gap-2 text-white/50 text-xs font-bold uppercase tracking-wider mb-2">
+                          <Save size={14} />
+                          {t.studio.assets.tabs.mine}
+                          </div>
+                          <SearchBar placeholder={t.studio.controls.searchMine} className="mb-0" />
+                      </div>
+
+                      <div className="flex-1 overflow-y-auto custom-scrollbar px-5 pb-5 pt-4 space-y-4">
+                          <div className="grid grid-cols-2 gap-3">
+                              {[...savedAssets, ...uploadedHistory].filter(a => a.module === module || !a.module).map(asset => (
+                                  <div 
+                                  key={asset.id} 
+                                  onClick={() => handleAssetClick(asset)}
+                                  className={`aspect-[3/4] rounded-lg overflow-hidden cursor-pointer border flex flex-col bg-[#111] group hover:border-white/30 transition-all ${baseModel === asset.id ? 'border-white shadow-[0_0_15px_rgba(255,255,255,0.4)]' : 'border-white/5'}`}
+                                  >
+                                  <div className={`flex-1 flex items-center justify-center ${cardImageBg} relative overflow-hidden transition-colors w-full`}>
+                                      {asset.src ? (
+                                          asset.mediaType === 'video' ? (
+                                            <video src={asset.src} className="w-full h-full object-cover" />
+                                          ) : (
+                                            <img src={asset.src} className="w-full h-full object-cover" />
+                                          )
+                                      ) : (
+                                          <div 
+                                            className="w-full h-full flex items-center justify-center"
+                                            style={{ backgroundColor: asset.previewColor || '#333' }}
+                                          >
+                                            <span className="text-2xl opacity-50">
+                                                {asset.type === 'snapshot' ? '📸' : '💾'}
+                                            </span>
+                                          </div>
+                                      )}
+                                      <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/90 to-transparent">
+                                          <p className="text-[10px] font-medium text-white text-center drop-shadow-md truncate">{asset.name}</p>
+                                      </div>
+                                  </div>
+                                  </div>
+                              ))}
+                              {[...savedAssets, ...uploadedHistory].filter(a => a.module === module || !a.module).length === 0 && (
+                                  <div className="col-span-2 text-center py-8 text-xs text-white/30 italic">
+                                  No saved assets yet
+                                  </div>
+                              )}
+                          </div>
+                      </div>
+                  </div>
+                  )}
+
+                  {activeRightTab === 'background' && (
+                  <div className="flex-1 flex flex-col h-full fade-in duration-300">
+                      <div className="shrink-0 px-5 pt-5 pb-0">
+                          <div className="flex items-center gap-2 text-white/50 text-xs font-bold uppercase tracking-wider mb-2">
+                          <ImageIcon size={14} />
+                          Background
+                          </div>
+                      </div>
+                      <div className="flex-1 overflow-y-auto custom-scrollbar px-5 pb-5 pt-4 space-y-4">
+                           <div className="grid grid-cols-2 gap-3">
+                              {BACKGROUNDS.map(bg => (
+                                  <button
+                                      key={bg.id}
+                                      onClick={() => setSelectedBackground(bg)}
+                                      className={`aspect-video rounded-lg overflow-hidden border relative group transition-all ${selectedBackground.id === bg.id ? 'border-white shadow-[0_0_15px_rgba(255,255,255,0.4)]' : 'border-white/5 hover:border-white/30'}`}
+                                  >
+                                      {bg.type === 'color' ? (
+                                          <div className="w-full h-full" style={{ backgroundColor: bg.value }} />
+                                      ) : (
+                                          <img src={bg.value} className="w-full h-full object-cover" />
+                                      )}
+                                      <div className="absolute bottom-0 left-0 right-0 p-1 bg-black/60 backdrop-blur-sm">
+                                          <p className="text-[10px] text-center text-white">{bg.name}</p>
+                                      </div>
+                                  </button>
+                              ))}
+                           </div>
+                      </div>
+                  </div>
+                  )}
+
+              </div>
+
+              {/* Right Sidebar Icon Nav */}
+              <div className="w-14 bg-black/80 flex flex-col items-center py-6 gap-6 border-l border-white/5 relative z-40 backdrop-blur-xl">
+                
+                {/* 1. Model/Avatar Tab */}
+                <button 
+                  onClick={() => setActiveRightTab('avatar')} 
+                  className={`p-2 rounded-lg transition-all relative group ${activeRightTab === 'avatar' ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white hover:bg-white/5'}`}
+                  title={t.studio.assets.models}
+                >
+                  <User size={20}/>
+                  {activeRightTab === 'avatar' && <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full w-1 h-8 bg-blue-500 rounded-r shadow-[0_0_10px_rgba(59,130,246,0.5)]" />}
+                </button>
+
+                {/* 2. Accessories Tab (3D Only) */}
+                {module === '3d-avatar' && (
+                  <button 
+                    onClick={() => setActiveRightTab('accessory')} 
+                    className={`p-2 rounded-lg transition-all relative group ${activeRightTab === 'accessory' ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white hover:bg-white/5'}`}
+                    title={t.studio.assets.accessories}
+                  >
+                    <Glasses size={20}/>
+                    {activeRightTab === 'accessory' && <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full w-1 h-8 bg-purple-500 rounded-r shadow-[0_0_10px_rgba(168,85,247,0.5)]" />}
+                  </button>
+                )}
+
+                {/* 3. Voice Tab (2D Chat / 2D Audio / 3D Avatar with Voice) */}
+                {/* Always show voice for now as all modules use it in some capacity or it's requested in UI */}
+                <button 
+                  onClick={() => setActiveRightTab('voice')} 
+                  className={`p-2 rounded-lg transition-all relative group ${activeRightTab === 'voice' ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white hover:bg-white/5'}`}
+                  title={t.studio.controls.voice}
+                >
+                  <Mic size={20}/>
+                  {activeRightTab === 'voice' && <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full w-1 h-8 bg-green-500 rounded-r shadow-[0_0_10px_rgba(74,222,128,0.5)]" />}
+                </button>
+
+                {/* 4. Background Tab (All) */}
+                 <button 
+                    onClick={() => setActiveRightTab('background')} 
+                    className={`p-2 rounded-lg transition-all relative group ${activeRightTab === 'background' ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white hover:bg-white/5'}`}
+                    title="Background"
+                  >
+                    <ImageIcon size={20}/>
+                    {activeRightTab === 'background' && <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full w-1 h-8 bg-yellow-500 rounded-r shadow-[0_0_10px_rgba(234,179,8,0.5)]" />}
+                  </button>
+
+                {/* 5. Mine Tab */}
+                <button 
+                  onClick={() => setActiveRightTab('mine')} 
+                  className={`p-2 rounded-lg transition-all relative group ${activeRightTab === 'mine' ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white hover:bg-white/5'}`}
+                  title={t.studio.assets.tabs.mine}
+                >
+                  <FolderOpen size={20}/>
+                  {activeRightTab === 'mine' && <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full w-1 h-8 bg-orange-500 rounded-r shadow-[0_0_10px_rgba(249,115,22,0.5)]" />}
+                </button>
+              </div>
+          </div>
+      </div>
+    </div>
+  );
+}
