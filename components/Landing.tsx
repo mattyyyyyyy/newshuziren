@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, memo, useMemo } from 'react';
 import { Mic, MessageSquare, Box, Globe, Ghost, ChevronDown, Check } from 'lucide-react';
 import { AppModule } from '../types';
-import GlassCard3D from './GlassCard3D';
 import Navbar from './Navbar';
 
 interface LandingProps {
@@ -117,8 +116,8 @@ const FeatureCard: React.FC<FeatureCardProps> = memo(({
           ? undefined 
           : '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
       }}
-      // OPTIMIZATION: Updated dimensions to w-[280px] h-[420px] for balanced look
-      className={`absolute w-[280px] h-[420px] cursor-pointer group origin-center will-change-transform rounded-[2rem] bg-white/5 backdrop-blur-md border transition-all duration-500 overflow-hidden
+      // OPTIMIZATION: Updated dimensions to w-[260px] h-[400px] for optimal balance
+      className={`absolute w-[260px] h-[400px] cursor-pointer group origin-center will-change-transform rounded-[2rem] bg-white/5 backdrop-blur-md border transition-all duration-500 overflow-hidden
         ${isHovered ? 'animate-border-pulse bg-white/10' : 'border-white/10'}
       `}
     >
@@ -219,9 +218,9 @@ export default function Landing({ onSelectModule, lang, setLang, t }: LandingPro
   };
 
   // --- Card Deck Logic ---
-  // Updated spacing for medium cards (280px width)
-  const CARD_SPACING = 210; 
-  const PUSH_DISTANCE = 260; 
+  // Updated spacing for 260px cards
+  const CARD_SPACING = 200; 
+  const PUSH_DISTANCE = 240; 
   const CENTER_INDEX = 1.5; // Adjusted center for 4 items
 
   const getCardStyle = (index: number) => {
