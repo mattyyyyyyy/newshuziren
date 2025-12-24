@@ -16,19 +16,19 @@ export interface ColorBendsProps {
   style?: CSSProperties;
 }
 
-export type AppModule = '2d-audio' | '2d-chat' | '3d-avatar' | '2d-avatar' | 'ai-voice';
+export type AppModule = '2d-audio' | '2d-chat' | '3d-avatar' | '2d-avatar' | 'ai-voice' | 'prompt-library';
 
 export interface Asset {
   id: string;
   name: string;
   type: 'base' | 'accessory' | 'template' | 'upload' | 'snapshot';
-  module?: AppModule; // Added to track which module saved this asset
+  module?: AppModule;
   category?: 'male' | 'female' | 'pet';
   subCategory?: 'top' | 'bottom' | 'shoes' | 'decoration';
   previewColor?: string;
   previewImage?: string;
   src?: string;
-  mediaType?: 'image' | 'video' | 'audio'; // Added 'audio' for BGM
+  mediaType?: 'image' | 'video' | 'audio';
   compatibleWith?: string[];
   state?: {
     baseModel: string;
